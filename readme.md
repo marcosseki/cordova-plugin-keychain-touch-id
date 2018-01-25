@@ -1,6 +1,6 @@
 
 
-# cordova-plugin-keychain-touch-id 
+# cordova-plugin-keychain-touch-id
 
 A cordova plugin adding the iOS TouchID / Android fingerprint to your app and allowing you to store a password securely in the device keychain.
 
@@ -54,7 +54,7 @@ Cordova plugin for interacting with iOS touchId and keychain
 
 # Usage
 
-Make sure you check if the plugin is installed 
+Make sure you check if the plugin is installed
 
 ```
 if (window.plugins.touchid) {
@@ -64,9 +64,9 @@ if (window.plugins.touchid) {
 
 Call the function you like
 
-**isAvailable(successCallback, errorCallback(msg))** will Check if touchid is available on the used device 	
-	
-**save(key,password, successCallback, errorCallback(msg))** 
+**isAvailable(successCallback(biometryType), errorCallback(msg))** will Check if touchid is available on the used device. The `successCallback` gets the `biometryType` argument with 'face' on iPhone X, 'touch' on other devices.
+
+**save(key,password, successCallback, errorCallback(msg))**
 will save a password under the key in the device keychain, which can be retrieved using a fingerprint
 
 **verify(key,message,successCallback(password), errorCallback(errorCode))**
@@ -92,11 +92,12 @@ This invalid key is removed - user needs to **save their password again**.
 
 ```js
 if (window.plugins) {
-    window.plugins.touchid.isAvailable(function() {
+    window.plugins.touchid.isAvailable(function(biometryType) {
+        var serviceName = (biometryType === "face") ? "Face ID" : "Touch ID";
         window.plugins.touchid.has("MyKey", function() {
-            alert("Touch ID avaialble and Password key available");
+            alert(serviceName + " avaialble and Password key available");
         }, function() {
-            alert("Touch ID available but no Password Key available");
+            alert(serviceName + " available but no Password Key available");
         });
     }, function(msg) {
         alert("no Touch ID available");
